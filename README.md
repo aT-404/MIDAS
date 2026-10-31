@@ -103,7 +103,6 @@ MIDAS/
 ├── LICENSE
 ├── requirements.txt
 ├── .env.example
-├── IMPLEMENTATION_PLAN.md
 ├── PROJECT_JOURNAL.md
 ├── config/
 │   ├── schemas/
