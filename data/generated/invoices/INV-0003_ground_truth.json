@@ -1,0 +1,45 @@
+{
+  "vendor_name": "KIRLOSKAR PNEUMATIC CO",
+  "vendor_address": "H.No. 95, Handa, Ranchi - 413164",
+  "invoice_number": "INV-6881",
+  "invoice_date": "2026-04-19",
+  "line_items": [
+    {
+      "description": "High-Pressure Hydraulic Valve 25mm",
+      "qty": 7.0,
+      "unit_price": 12500.0,
+      "total": 87500.0
+    },
+    {
+      "description": "Centrifugal Bearing Housing Unit",
+      "qty": 2.0,
+      "unit_price": 18500.0,
+      "total": 37000.0
+    },
+    {
+      "description": "Rotary Shaft Oil Seal Viton",
+      "qty": 9.0,
+      "unit_price": 850.0,
+      "total": 7650.0
+    },
+    {
+      "description": "Cast Iron Slurry Casing Liner",
+      "qty": 5.0,
+      "unit_price": 45000.0,
+      "total": 225000.0
+    },
+    {
+      "description": "Pneumatic Actuator Double Acting",
+      "qty": 10.0,
+      "unit_price": 27800.0,
+      "total": 278000.0
+    }
+  ],
+  "subtotal": 635150.0,
+  "tax_rate": 18.0,
+  "tax_amount": 114327.0,
+  "grand_total": 749477.0,
+  "currency": "INR",
+  "payment_terms": "Net 30 Days",
+  "bank_details": "State Bank of India, A/C: 88862621936, IFSC: SBIN0004521"
+}

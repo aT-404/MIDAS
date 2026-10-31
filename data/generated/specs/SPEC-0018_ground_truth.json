@@ -1,0 +1,56 @@
+{
+  "equipment_name": "Multi-Stage High Pressure Boiler Feed Pump",
+  "model_number": "CSP-596X",
+  "manufacturer": "Sulzer Pumps India",
+  "parameters": [
+    {
+      "name": "Max Operating Pressure",
+      "value": "300",
+      "unit": "bar",
+      "tolerance": "\u00b1 5%"
+    },
+    {
+      "name": "Volumetric Flow Rate",
+      "value": "450",
+      "unit": "m3/h",
+      "tolerance": "\u00b1 3%"
+    },
+    {
+      "name": "Shaft Speed Rating",
+      "value": "2900",
+      "unit": "RPM",
+      "tolerance": "\u00b1 10 RPM"
+    },
+    {
+      "name": "Hydraulic Head Rating",
+      "value": "120",
+      "unit": "m",
+      "tolerance": "\u00b1 4%"
+    },
+    {
+      "name": "Impeller Diameter",
+      "value": "380",
+      "unit": "mm",
+      "tolerance": "\u00b1 1 mm"
+    },
+    {
+      "name": "Casing Wall Thickness",
+      "value": "24",
+      "unit": "mm",
+      "tolerance": "Min"
+    }
+  ],
+  "operating_conditions": {
+    "temp_min_c": -15.0,
+    "temp_max_c": 110.0,
+    "input_voltage_v": "415V AC 3-Phase",
+    "rated_current_a": "55A"
+  },
+  "certification_standards": [
+    "ISO 9001:2015",
+    "API 610 12th Ed",
+    "CE Certified",
+    "ATEX Zone 1"
+  ],
+  "revision_date": "2026-02-28"
+}

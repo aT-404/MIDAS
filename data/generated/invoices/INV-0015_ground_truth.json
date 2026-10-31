@@ -1,0 +1,39 @@
+{
+  "vendor_name": "HINDALCO INDUSTRIES",
+  "vendor_address": "H.No. 781, Zachariah Nagar, Tiruchirappalli - 267736",
+  "invoice_number": "INV-3167",
+  "invoice_date": "2026-10-10",
+  "line_items": [
+    {
+      "description": "Pneumatic Actuator Double Acting",
+      "qty": 2.0,
+      "unit_price": 27800.0,
+      "total": 55600.0
+    },
+    {
+      "description": "Heavy Duty Gasket Kit Neoprene",
+      "qty": 2.0,
+      "unit_price": 1200.0,
+      "total": 2400.0
+    },
+    {
+      "description": "Rotary Shaft Oil Seal Viton",
+      "qty": 7.0,
+      "unit_price": 850.0,
+      "total": 5950.0
+    },
+    {
+      "description": "Submersible Impeller Assembly 316L",
+      "qty": 6.0,
+      "unit_price": 38400.0,
+      "total": 230400.0
+    }
+  ],
+  "subtotal": 294350.0,
+  "tax_rate": 18.0,
+  "tax_amount": 52983.0,
+  "grand_total": 347333.0,
+  "currency": "INR",
+  "payment_terms": "Net 30 Days",
+  "bank_details": "State Bank of India, A/C: 67653831185, IFSC: SBIN0004521"
+}

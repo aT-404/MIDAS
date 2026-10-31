@@ -1,0 +1,51 @@
+{
+  "vendor_name": "LARSEN & TOUBRO HEAVY ENGINEERING",
+  "vendor_address": "H.No. 838, Kannan Marg, Giridih - 026542",
+  "invoice_number": "INV-9935",
+  "invoice_date": "2026-01-16",
+  "line_items": [
+    {
+      "description": "High-Pressure Hydraulic Valve 25mm",
+      "qty": 10.0,
+      "unit_price": 12500.0,
+      "total": 125000.0
+    },
+    {
+      "description": "Pneumatic Actuator Double Acting",
+      "qty": 1.0,
+      "unit_price": 27800.0,
+      "total": 27800.0
+    },
+    {
+      "description": "Heavy Duty Gasket Kit Neoprene",
+      "qty": 9.0,
+      "unit_price": 1200.0,
+      "total": 10800.0
+    },
+    {
+      "description": "Submersible Impeller Assembly 316L",
+      "qty": 4.0,
+      "unit_price": 38400.0,
+      "total": 153600.0
+    },
+    {
+      "description": "Cast Iron Slurry Casing Liner",
+      "qty": 9.0,
+      "unit_price": 45000.0,
+      "total": 405000.0
+    },
+    {
+      "description": "Flanged Carbon Steel Pipe Fitting 4-inch",
+      "qty": 7.0,
+      "unit_price": 4200.0,
+      "total": 29400.0
+    }
+  ],
+  "subtotal": 751600.0,
+  "tax_rate": 18.0,
+  "tax_amount": 135288.0,
+  "grand_total": 886888.0,
+  "currency": "INR",
+  "payment_terms": "Net 30 Days",
+  "bank_details": "State Bank of India, A/C: 71076327392, IFSC: SBIN0004521"
+}

@@ -1,0 +1,32 @@
+ocr:
+  engine: rapidocr  # rapidocr (PP-OCRv4 ONNX) or paddleocr
+  lang: en
+  use_angle_cls: true
+  det_db_thresh: 0.3
+  det_db_box_thresh: 0.5
+  unclip_ratio: 1.6
+
+layout:
+  model: contour_heuristic  # contour_heuristic or detectron2
+  threshold: 0.5
+  min_table_area_ratio: 0.05
+
+llm:
+  model: gemini-1.5-flash
+  temperature: 0.0
+  max_tokens: 2048
+  fallback_to_heuristic: true
+
+validation:
+  confidence_threshold: 0.75
+  require_all_required_fields: true
+  arithmetic_tolerance: 0.05
+
+storage:
+  db_path: outputs/midas.db
+  enable_fts: true
+
+paths:
+  output_dir: outputs/extracted
+  rejected_dir: outputs/rejected
+  samples_dir: data/samples

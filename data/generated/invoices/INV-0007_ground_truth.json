@@ -1,0 +1,39 @@
+{
+  "vendor_name": "KIRLOSKAR PNEUMATIC CO",
+  "vendor_address": "H.No. 012, Sami Street, Kharagpur - 978480",
+  "invoice_number": "INV-4456",
+  "invoice_date": "2026-07-16",
+  "line_items": [
+    {
+      "description": "Pneumatic Actuator Double Acting",
+      "qty": 3.0,
+      "unit_price": 27800.0,
+      "total": 83400.0
+    },
+    {
+      "description": "Rotary Shaft Oil Seal Viton",
+      "qty": 5.0,
+      "unit_price": 850.0,
+      "total": 4250.0
+    },
+    {
+      "description": "Centrifugal Bearing Housing Unit",
+      "qty": 3.0,
+      "unit_price": 18500.0,
+      "total": 55500.0
+    },
+    {
+      "description": "Heavy Duty Gasket Kit Neoprene",
+      "qty": 4.0,
+      "unit_price": 1200.0,
+      "total": 4800.0
+    }
+  ],
+  "subtotal": 147950.0,
+  "tax_rate": 18.0,
+  "tax_amount": 26631.0,
+  "grand_total": 174581.0,
+  "currency": "INR",
+  "payment_terms": "Net 30 Days",
+  "bank_details": "State Bank of India, A/C: 86214147353, IFSC: SBIN0004521"
+}

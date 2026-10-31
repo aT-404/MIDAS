@@ -1,0 +1,45 @@
+{
+  "vendor_name": "JINDAL STEEL & POWER LTD",
+  "vendor_address": "H.No. 58, Yadav Marg, Bhopal - 429401",
+  "invoice_number": "INV-6617",
+  "invoice_date": "2026-06-13",
+  "line_items": [
+    {
+      "description": "Pneumatic Actuator Double Acting",
+      "qty": 5.0,
+      "unit_price": 27800.0,
+      "total": 139000.0
+    },
+    {
+      "description": "Flanged Carbon Steel Pipe Fitting 4-inch",
+      "qty": 1.0,
+      "unit_price": 4200.0,
+      "total": 4200.0
+    },
+    {
+      "description": "High-Pressure Hydraulic Valve 25mm",
+      "qty": 1.0,
+      "unit_price": 12500.0,
+      "total": 12500.0
+    },
+    {
+      "description": "Centrifugal Bearing Housing Unit",
+      "qty": 6.0,
+      "unit_price": 18500.0,
+      "total": 111000.0
+    },
+    {
+      "description": "Rotary Shaft Oil Seal Viton",
+      "qty": 3.0,
+      "unit_price": 850.0,
+      "total": 2550.0
+    }
+  ],
+  "subtotal": 269250.0,
+  "tax_rate": 18.0,
+  "tax_amount": 48465.0,
+  "grand_total": 317715.0,
+  "currency": "INR",
+  "payment_terms": "Net 30 Days",
+  "bank_details": "State Bank of India, A/C: 32599925789, IFSC: SBIN0004521"
+}

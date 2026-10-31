@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InspectionReport",
+  "type": "object",
+  "required": ["site_name", "inspector_name", "inspection_date", "checklist_items"],
+  "properties": {
+    "site_name": {
+      "type": "string",
+      "description": "Name or location of the inspection site or facility"
+    },
+    "inspector_name": {
+      "type": "string",
+      "description": "Name or badge of the certified inspector"
+    },
+    "inspection_date": {
+      "type": "string",
+      "description": "Date inspection was conducted"
+    },
+    "checklist_items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["item", "status"],
+        "properties": {
+          "item": {"type": "string"},
+          "status": {
+            "type": "string",
+            "enum": ["PASS", "FAIL", "NA"]
+          },
+          "remarks": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "deficiencies_found": {
+      "type": ["string", "null"],
+      "description": "Summary of critical defects or issues observed"
+    },
+    "corrective_actions": {
+      "type": ["string", "null"],
+      "description": "Required remedial actions"
+    },
+    "next_inspection_date": {
+      "type": ["string", "null"],
+      "description": "Scheduled next inspection date"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "vendor_name": "LARSEN & TOUBRO HEAVY ENGINEERING",
+  "vendor_address": "99/737, Gupta Marg, Jalandhar - 566701",
+  "invoice_number": "INV-8397",
+  "invoice_date": "2025-11-17",
+  "line_items": [
+    {
+      "description": "Rotary Shaft Oil Seal Viton",
+      "qty": 10.0,
+      "unit_price": 850.0,
+      "total": 8500.0
+    },
+    {
+      "description": "High-Pressure Hydraulic Valve 25mm",
+      "qty": 9.0,
+      "unit_price": 12500.0,
+      "total": 112500.0
+    },
+    {
+      "description": "Flanged Carbon Steel Pipe Fitting 4-inch",
+      "qty": 4.0,
+      "unit_price": 4200.0,
+      "total": 16800.0
+    },
+    {
+      "description": "Heavy Duty Gasket Kit Neoprene",
+      "qty": 10.0,
+      "unit_price": 1200.0,
+      "total": 12000.0
+    }
+  ],
+  "subtotal": 149800.0,
+  "tax_rate": 18.0,
+  "tax_amount": 26964.0,
+  "grand_total": 176764.0,
+  "currency": "INR",
+  "payment_terms": "Net 30 Days",
+  "bank_details": "State Bank of India, A/C: 10945826486, IFSC: SBIN0004521"
+}

@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Invoice",
+  "type": "object",
+  "required": ["vendor_name", "invoice_number", "grand_total"],
+  "properties": {
+    "vendor_name": {
+      "type": "string",
+      "description": "Name of the supplier or vendor company"
+    },
+    "vendor_address": {
+      "type": ["string", "null"],
+      "description": "Physical or registered address of the vendor"
+    },
+    "invoice_number": {
+      "type": "string",
+      "description": "Unique identifier for the invoice document"
+    },
+    "invoice_date": {
+      "type": ["string", "null"],
+      "description": "Date of issue (ISO 8601 YYYY-MM-DD format preferred)"
+    },
+    "line_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["description", "qty", "unit_price", "total"],
+        "properties": {
+          "description": {"type": "string"},
+          "qty": {"type": "number"},
+          "unit_price": {"type": "number"},
+          "total": {"type": "number"}
+        }
+      }
+    },
+    "subtotal": {
+      "type": ["number", "null"],
+      "description": "Total amount before tax"
+    },
+    "tax_rate": {
+      "type": ["number", "null"],
+      "description": "Applicable percentage tax rate"
+    },
+    "tax_amount": {
+      "type": ["number", "null"],
+      "description": "Total tax amount"
+    },
+    "grand_total": {
+      "type": "number",
+      "minimum": 0.01,
+      "description": "Grand total payable including tax"
+    },
+    "currency": {
+      "type": "string",
+      "default": "INR",
+      "description": "3-letter ISO currency code"
+    },
+    "payment_terms": {
+      "type": ["string", "null"]
+    },
+    "bank_details": {
+      "type": ["string", "null"]
+    }
+  }
+}

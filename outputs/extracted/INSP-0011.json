@@ -1,0 +1,31 @@
+{
+  "site_name": "Kattupalli Shipyard Drydock",
+  "inspector_name": "Priya Sundaram",
+  "inspection_date": "2026-01-27",
+  "checklist_items": [
+    {
+      "item": "Visual inspection of casing for hairline casting cracks",
+      "status": "PASS",
+      "remarks": "Zero defects detected under UV d"
+    },
+    {
+      "item": "Dynamic shaft runout balance check (<0.02mm)",
+      "status": "PASS",
+      "remarks": "Measured at 0.012mm TIR"
+    },
+    {
+      "item": "Hydrostatic pressure containment hold (350 bar / 30 min)",
+      "status": "PASS",
+      "remarks": "Pressure maintained without drop"
+    },
+    {
+      "item": "Mechanical seal leak rate within tolerance (<5 ml/h)",
+      "status": "PASS",
+      "remarks": "No visible dripping observed"
+    }
+  ],
+  "deficiencies_found": "None reported",
+  "corrective_actions": null,
+  "next_inspection_date": null,
+  "_extraction_confidence": 1.0
+}

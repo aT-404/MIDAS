@@ -1,0 +1,45 @@
+{
+  "site_name": "Powai Plant 1 Machine Shop",
+  "inspector_name": "Anand Varma (Senior Mechanical Auditor)",
+  "inspection_date": "2026-04-19",
+  "checklist_items": [
+    {
+      "item": "Visual inspection of casing for hairline casting cracks",
+      "status": "PASS",
+      "remarks": "Zero defects detected under UV dye"
+    },
+    {
+      "item": "Dynamic shaft runout balance check (<0.02mm)",
+      "status": "PASS",
+      "remarks": "Measured at 0.012mm TIR"
+    },
+    {
+      "item": "Hydrostatic pressure containment hold (350 bar / 30 min)",
+      "status": "PASS",
+      "remarks": "Pressure maintained without drop"
+    },
+    {
+      "item": "Mechanical seal leak rate within tolerance (<5 ml/h)",
+      "status": "PASS",
+      "remarks": "No visible dripping observed"
+    },
+    {
+      "item": "Foundation anchor bolt torque verification (450 Nm)",
+      "status": "PASS",
+      "remarks": "Torqued and calibrated"
+    },
+    {
+      "item": "Emergency automatic shutdown circuit trip response",
+      "status": "PASS",
+      "remarks": "Tripped in 180ms"
+    },
+    {
+      "item": "Bearing vibration velocity RMS (<2.8 mm/s)",
+      "status": "FAIL",
+      "remarks": "Normal"
+    }
+  ],
+  "deficiencies_found": "Vibration spike on drive end bearing journal exceeding ISO 10816 limits",
+  "corrective_actions": "Re-align coupling hubs and replace drive-end bearing spacer",
+  "next_inspection_date": "2026-10-26"
+}

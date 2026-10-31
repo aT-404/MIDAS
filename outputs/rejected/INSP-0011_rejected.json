@@ -1,0 +1,16 @@
+{
+  "source_file": "INSP-0011.pdf",
+  "doc_type": "inspection_report",
+  "rejection_reason": "Schema validation error: 1 validation error for InspectionReport\nchecklist_items\n  List should have at least 1 item after validation, not 0 [type=too_short, input_value=[], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.13/v/too_short",
+  "confidence": 0.75,
+  "raw_extraction": {
+    "site_name": "Kattupalli Shipyard Drydock I Date",
+    "inspector_name": "Priya Sundaram",
+    "inspection_date": "2026-01-27",
+    "checklist_items": [],
+    "deficiencies_found": "None reported",
+    "corrective_actions": null,
+    "next_inspection_date": null,
+    "_extraction_confidence": 0.75
+  }
+}

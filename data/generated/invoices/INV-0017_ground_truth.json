@@ -1,0 +1,39 @@
+{
+  "vendor_name": "HINDALCO INDUSTRIES",
+  "vendor_address": "80/50, Sood Nagar, Howrah - 219136",
+  "invoice_number": "INV-9786",
+  "invoice_date": "2025-12-10",
+  "line_items": [
+    {
+      "description": "Heavy Duty Gasket Kit Neoprene",
+      "qty": 4.0,
+      "unit_price": 1200.0,
+      "total": 4800.0
+    },
+    {
+      "description": "Submersible Impeller Assembly 316L",
+      "qty": 2.0,
+      "unit_price": 38400.0,
+      "total": 76800.0
+    },
+    {
+      "description": "Flanged Carbon Steel Pipe Fitting 4-inch",
+      "qty": 8.0,
+      "unit_price": 4200.0,
+      "total": 33600.0
+    },
+    {
+      "description": "Rotary Shaft Oil Seal Viton",
+      "qty": 9.0,
+      "unit_price": 850.0,
+      "total": 7650.0
+    }
+  ],
+  "subtotal": 122850.0,
+  "tax_rate": 18.0,
+  "tax_amount": 22113.0,
+  "grand_total": 144963.0,
+  "currency": "INR",
+  "payment_terms": "Net 30 Days",
+  "bank_details": "State Bank of India, A/C: 14715482085, IFSC: SBIN0004521"
+}

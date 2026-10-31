@@ -1,0 +1,51 @@
+{
+  "vendor_name": "BHARAT FORGE INDUSTRIAL",
+  "vendor_address": "30/10, Bir Ganj, Bathinda - 834738",
+  "invoice_number": "INV-3060",
+  "invoice_date": "2025-12-15",
+  "line_items": [
+    {
+      "description": "Flanged Carbon Steel Pipe Fitting 4-inch",
+      "qty": 9.0,
+      "unit_price": 4200.0,
+      "total": 37800.0
+    },
+    {
+      "description": "Pneumatic Actuator Double Acting",
+      "qty": 4.0,
+      "unit_price": 27800.0,
+      "total": 111200.0
+    },
+    {
+      "description": "Cast Iron Slurry Casing Liner",
+      "qty": 5.0,
+      "unit_price": 45000.0,
+      "total": 225000.0
+    },
+    {
+      "description": "Centrifugal Bearing Housing Unit",
+      "qty": 7.0,
+      "unit_price": 18500.0,
+      "total": 129500.0
+    },
+    {
+      "description": "Rotary Shaft Oil Seal Viton",
+      "qty": 6.0,
+      "unit_price": 850.0,
+      "total": 5100.0
+    },
+    {
+      "description": "High-Pressure Hydraulic Valve 25mm",
+      "qty": 8.0,
+      "unit_price": 12500.0,
+      "total": 100000.0
+    }
+  ],
+  "subtotal": 608600.0,
+  "tax_rate": 18.0,
+  "tax_amount": 109548.0,
+  "grand_total": 718148.0,
+  "currency": "INR",
+  "payment_terms": "Net 30 Days",
+  "bank_details": "State Bank of India, A/C: 82583289803, IFSC: SBIN0004521"
+}

@@ -1,0 +1,45 @@
+{
+  "vendor_name": "KIRLOSKAR PNEUMATIC CO",
+  "vendor_address": "H.No. 24, Sathe Street, Kishanganj - 112805",
+  "invoice_number": "INV-9565",
+  "invoice_date": "2026-06-08",
+  "line_items": [
+    {
+      "description": "Rotary Shaft Oil Seal Viton",
+      "qty": 5.0,
+      "unit_price": 850.0,
+      "total": 4250.0
+    },
+    {
+      "description": "Centrifugal Bearing Housing Unit",
+      "qty": 7.0,
+      "unit_price": 18500.0,
+      "total": 129500.0
+    },
+    {
+      "description": "Heavy Duty Gasket Kit Neoprene",
+      "qty": 3.0,
+      "unit_price": 1200.0,
+      "total": 3600.0
+    },
+    {
+      "description": "Flanged Carbon Steel Pipe Fitting 4-inch",
+      "qty": 5.0,
+      "unit_price": 4200.0,
+      "total": 21000.0
+    },
+    {
+      "description": "Submersible Impeller Assembly 316L",
+      "qty": 8.0,
+      "unit_price": 38400.0,
+      "total": 307200.0
+    }
+  ],
+  "subtotal": 465550.0,
+  "tax_rate": 18.0,
+  "tax_amount": 83799.0,
+  "grand_total": 549349.0,
+  "currency": "INR",
+  "payment_terms": "Net 30 Days",
+  "bank_details": "State Bank of India, A/C: 10311570307, IFSC: SBIN0004521"
+}
