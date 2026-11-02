@@ -20,7 +20,7 @@ Built around a real operational bottleneck: in large enterprises, critical infor
 
 ## Architecture Diagram
 
-```
+```mermaid
 flowchart TD
     A["Raw Input (PDF / Scanned Image / Photo)"] --> B["Pre-processing Engine (src/preprocessing/enhance.py)"]
     B --> C["PaddleOCR v4 Engine (src/ocr/engine.py)"]
@@ -29,7 +29,8 @@ flowchart TD
     D --> F["Entity Extractor — LLM Layer (src/extraction/entity_extractor.py)"]
     E --> G["Pydantic Schema Validator (src/schema/validator.py)"]
     F --> G
-    G --> H["SQLite + FTS5 Storage (src/storage/database.py)"]
+    G -->|Valid| H["SQLite + FTS5 Storage (src/storage/database.py)"]
+    G -->|Invalid| K["Rejection Queue (outputs/rejected/)"]
     G --> I["JSON Output Files (outputs/extracted/)"]
     H --> J["Streamlit Dashboard (dashboard/app.py)"]
     I --> J
@@ -100,10 +101,11 @@ pytest
 ```
 MIDAS/
 ├── README.md
+├── IMPLEMENTATION_PLAN.md
+├── PROJECT_JOURNAL.md
 ├── LICENSE
 ├── requirements.txt
 ├── .env.example
-├── PROJECT_JOURNAL.md
 ├── config/
 │   ├── schemas/
 │   │   ├── invoice.json
@@ -156,6 +158,7 @@ MIDAS/
 
 ## Documentation
 
+- [Implementation Plan](IMPLEMENTATION_PLAN.md)
 - [Architecture Guide](docs/architecture.md)
 - [Extraction Methodology](docs/extraction-methodology.md)
 - [Schema Design](docs/schema-design.md)

@@ -17,7 +17,7 @@ This guide details environment setup, configuration, and execution of the MIDAS 
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/your-username/MIDAS.git
+git clone https://github.com/aT-404/MIDAS.git
 cd MIDAS
 pip install -r requirements.txt
 ```

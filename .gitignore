@@ -51,9 +51,6 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
-# Internal planning files
-IMPLEMENTATION_PLAN.md
-*IMPLEMENTATION_PLAN*
 
 # Pipeline runtime temporary outputs & databases
 outputs/midas.db

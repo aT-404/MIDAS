@@ -1,94 +1,109 @@
 # Project Journal — MIDAS (Multimodal Intelligent Document Analysis System)
 
-A running technical log of architecture decisions, engineering trade-offs, and implementation milestones during the development of MIDAS.
+A running log of decisions, dead ends, and the things I figured out the hard way while building this.
 
 ---
 
-### Entry 1 — The operational problem
+### Entry 1 — Where this came from
 
-My ERM internship at Axis Max Life Insurance has been a lot of things, but what it's made most visible is how much enterprise time goes into data entry. Insurance companies run on forms: policy applications, claim documents, medical reports, inspection checklists, supplier invoices. A stack of these lands on a desk. Someone opens them one by one and types the values into a system. There's no automated step between "physical or scanned document" and "row in a database" — just a human doing it.
+My internship at Axis Max Life Insurance involves a lot of ERM work — risk registers, compliance reviews, reporting — and what I noticed early on is how much time the team spends on manual data entry from documents. Someone photographs a form. Someone else opens it on their screen and types the values into a spreadsheet. That's the whole workflow. There's no automated step between "scanned document" and "structured data." Just a person doing it one field at a time.
 
-That's the bottleneck I wanted to solve: an end-to-end pipeline that takes unstructured documents (scanned PDFs, smartphone photos) and produces clean, validated, structured data.
+It's not unique to insurance. The same bottleneck exists at industrial companies like L&T — supplier invoices for factory procurement, inspection reports filed by field engineers, technical specifications for heavy machinery. Different documents, same manual entry problem, potentially higher stakes if a number is misread.
 
-Industrial organizations like L&T operate under similar constraints at scale. Their documents aren't insurance forms — they're engineering specifications for heavy machinery, inspection reports from field engineers, and supplier invoices for factory procurement. Same operational challenge, but with higher stakes if the wrong parameter or number gets entered.
+That observation turned into this project: a pipeline that takes unstructured scanned or photographed documents and returns validated structured records, with no manual step in between.
 
-### Entry 2 — Research & Technology Selection
+### Entry 2 — Choosing the stack
 
-First question: what already exists and why isn't everyone using it?
+First real decision: what OCR engine to use, and whether to use a cloud API or run everything locally.
 
-Commercial cloud APIs (AWS Textract, Azure Document Intelligence, Google Document AI) work well, but they cost money per page at scale and require sending documents off-premise — which rules them out for confidential engineering and financial files. Open-source options are a mixed bag: Tesseract is the traditional starting point, but it's a raw OCR engine with no layout awareness, meaning it flattens tables into an unreadable linear text stream.
+Cloud APIs (AWS Textract, Azure Document Intelligence, Google Document AI) are genuinely good — I tested Textract on a few sample invoices and it handled them well. But they cost money per page and require sending documents off-site, which rules them out for confidential engineering specs or financial records. That constraint pushed me toward self-hosted options.
 
-Landed on this stack after benchmarking:
-- **PaddleOCR v4 (PP-OCRv4):** Significantly better table detection than Tesseract, handles rotated text blocks and dense layouts well, and crucially, runs fully offline on local CPU/GPU once model weights are downloaded.
-- **Layout Region Classification:** Classifies regions (title, header, table, paragraph, footer) before extraction, preventing tabular cell numbers from bleeding into surrounding prose.
-- **Gemini Flash for Multimodal Extraction:** Reads noisy OCR transcripts and infers context (e.g., recognizing that an abbreviated string `INV#` or `Bill No` maps to `invoice_number`). Language understanding handles variability that brittle regex patterns fail on.
+Tesseract is the obvious starting point for open-source OCR, but it has a fundamental limitation for this use case: it's a raw text extractor with no layout understanding. On a structured invoice or spec table, it flattens everything into a linear text stream and loses the column relationships entirely. You get numbers, but not which number belongs to which field.
 
-Also decided early: the LLM call must have strict schema expectations (typed JSON) with a confidence estimator. If required fields fail to extract or violate constraints, the document goes to a rejection queue rather than corrupting the database.
+PaddleOCR v4 (PP-OCRv4) is a different category. It handles rotated text, dense table layouts, and mixed font sizes much better than Tesseract, and it runs fully offline after model download. RapidOCR wraps the same PP-OCRv4 models as ONNX runtimes, which has lower startup overhead. I set up the engine to try RapidOCR first and fall back to the full PaddleOCR if it isn't installed.
 
-### Entry 3 — Choosing Document Classes
+For the extraction step — turning OCR text into typed fields — regex patterns alone don't hold up. An invoice from one vendor writes "Invoice No:" while another writes "Bill #" and another just has the number after a thin horizontal rule with no label at all. A language model handles that variability gracefully. Gemini Flash is free-tier accessible and fast enough to stay interactive, so that became the extraction layer. The critical design decision was building a deterministic heuristic fallback that runs when the API is unavailable, so the pipeline works completely offline.
 
-Selected three representative document types that cover key enterprise formats:
+### Entry 3 — Three document types
 
-1. **Invoices:** Numerical precision is critical. Grand totals must cross-validate against the sum of line items. A single misread digit represents a material error.
-2. **Technical Specifications:** Parameter tables with ratings, values, and units. The challenge is associating each parameter name with its value and unit when the layout isn't a neat two-column grid (e.g. "Operating Pressure: 250 bar ± 5%" inside running text).
-3. **Inspection Reports:** Checklist-heavy documents with PASS/FAIL/NA evaluations and free-text remarks. Non-standard layout structures where generalized extraction performs better than rigid positional templates.
+Selected three categories that cover the main enterprise document structures I was working with:
 
-### Entry 4 — Benchmark Dataset & Degradation Simulation
+**Invoices.** The interesting constraint here is arithmetic. A misread digit on a line item total isn't just a field error — it needs to fail an independent check. So I added an arithmetic cross-validation step: `grand_total` must reconcile against the sum of line items plus tax within 5% tolerance, verified separately from the schema validation.
 
-Proprietary enterprise documents cannot be hosted in an open repository due to confidentiality. To ensure rigorous testing, I built a dual approach:
-- Synthetic generation using Python, `Faker`, and `ReportLab` to produce ground-truth-paired PDFs across all three categories.
-- Realistic degradation simulation (`data/scripts/degrade.py`) applying off-axis skew (±5–12°), uneven lighting gradients, corner flash shadows, and sensor Gaussian noise.
+**Technical specifications.** These are parameter tables: operating pressure, rated capacity, shaft diameter, tolerance ranges. The challenge is that the layout isn't always a neat two-column grid. Sometimes the parameter name and value are on separate lines in free text. Sometimes units and tolerances are inline ("250 bar ± 5%"). The LLM handles this context much better than positional templates.
 
-Testing against realistic smartphone captures and poor scans is essential — if the preprocessing stage cannot handle degradation, the pipeline cannot survive real-world inputs.
+**Inspection reports.** Checklist-heavy with PASS/FAIL/NA evaluations and free-text remarks per item. Probably the most structurally varied of the three, since field inspection forms come from many sources and don't follow one template. The schema enforces that `status` must be one of the three valid values and that the checklist cannot be empty.
 
-### Entry 5 — Stress-Testing the Architecture with AI
+### Entry 4 — Building the test corpus
 
-Before writing the core modules, I used AI (Claude) to review and stress-test the architectural plan, challenge design assumptions, and catch edge cases early. Using AI as an active engineering sparring partner helped pressure-test the design before sinking time into implementation.
+I can't use real enterprise documents in an open repository. The pragmatic solution is synthetic generation: Python scripts using `Faker` and `ReportLab` to generate ground-truth-paired PDFs with realistic content.
 
-Key changes that emerged from this review:
-- **Switching from Tesseract to PaddleOCR:** Comparative benchmark data showed PaddleOCR v4 scores significantly higher on ReCTS and DocVQA for table-dense documents, especially with condensed typography.
-- **Incremental MVP Slice First:** Rather than building all components in parallel, the recommendation was to prove an end-to-end slice first: ingest one invoice, OCR it, extract schema fields, and validate output.
-- **Confidence Scoring:** Added `_extraction_confidence` as a computed metric based on schema fill-rate and completeness, giving the validation layer an objective threshold to act on.
-- **SQLite FTS5 Storage:** Integrated an FTS5 full-text search index from the start so the downstream dashboard could query parameters and vendor terms without scanning JSON files on disk.
+The vendor and part names matter here. If the test corpus uses made-up names ("Company A", "Widget XYZ"), the OCR vocabulary doesn't reflect what the system will see in practice. So I seeded the generation with actual industrial supply chain names — TATA METALIKS, L&T Heavy Engineering, BHARAT FORGE, Kirloskar Brothers — and component names like hydraulic control valves, slurry pump casings, centrifugal impellers. The ground truth JSON files paired with each PDF make precision/recall evaluation straightforward.
 
-### Entry 6 — Pipeline Design Refinements
+The degradation simulator applies three effects sequentially: off-axis rotation (±5–12°), a diagonal lighting gradient to simulate corner shadows from a phone camera, and Gaussian sensor noise. Then a slight Gaussian blur for lens softness. The result looks like a document photographed on a desk at an angle, which is what real-world input looks like. Testing only on clean PDFs would tell you very little about real performance.
 
-Proving the integration chain early confirmed that LLM structured extraction paired with deterministic fallback was reliable.
+### Entry 5 — Stress-testing the plan before building
 
-Added the explicit rejection pathway: every failed validation routes to `outputs/rejected/` with diagnostic error traces. In production data pipelines, surfacing explicit rejections is essential: the system must know when it doesn't know, rather than silently ingesting corrupt data.
+Before writing the core modules, I used Claude to review the architectural plan and push back on it. Not to generate code — to question the design decisions and find the edge cases I hadn't thought through.
 
-Also introduced arithmetic cross-validation for invoices: verifying that `grand_total` reconciles with line items within a 5% tolerance. One extra check catches the most important class of numerical extraction errors.
+The most useful thing that came out of it: the recommendation to prove an end-to-end slice first before building all components in parallel. Process one invoice completely — ingest, OCR, extract fields, validate, store — before building the spec and inspection paths. That way you find the integration issues early, when they're cheap to fix, rather than discovering them when you're wiring everything together at the end.
 
-### Entry 7 — The Preprocessing Discovery
+Two other things that changed from that review: confidence scoring as a first-class metric (I'd been treating extraction quality as a pass/fail rather than a gradient), and the FTS5 design decision — building full-text search into the storage layer from the start rather than adding it later, which avoids a painful migration.
 
-First significant technical hurdle during the build: the deskew function, which uses a Hough line transform to compute dominant baseline angles, performed poorly on inspection checklists. Checklists contain dozens of short horizontal rules (checkboxes, table dividers) that biased the angle estimator.
+Going back through my notes, I think the most valuable part of that exercise was being forced to defend the choices I'd made. When I had to explain why I chose adaptive Gaussian thresholding over Otsu's method for binarization, I realised I had a vague preference but not a concrete reason. Tested both on degraded samples and confirmed adaptive threshold handles uneven lighting gradients better, which is exactly the failure case the shadow removal step doesn't fully solve.
 
-**The fix:** Filtered Hough line segments to only consider lines longer than 25% of the image width before computing the median angle. Short decorative lines no longer skew the calculation. Also added an angle safety threshold: if the estimated rotation exceeds ±15°, skip deskew entirely (that indicates an upside-down or sideways orientation requiring 90° rotation, not micro-deskewing).
+### Entry 6 — The rejection queue
 
-### Entry 8 — Performance & Accuracy
+One of the early architectural decisions that turned out to be important: every pipeline failure routes somewhere explicit. Documents that fail schema validation go to `outputs/rejected/` with a diagnostic JSON containing the raw extraction and the specific validation error. Documents where the LLM returned unparseable output go there too.
 
-The pipeline runs end-to-end across all three document categories. Preprocessing significantly improves character-level recognition on degraded inputs (moving character accuracy from ~71% on raw degraded scans to ~89% post-enhancement). 
+This matters because silent failures are worse than loud ones. A pipeline that quietly writes a half-populated record to the database is harder to debug than one that says "this document was rejected, here's why." In a production data pipeline, knowing the rejection rate and the failure reasons is the first signal that something has changed upstream — a new document format, a degradation the preprocessing stage isn't handling, a model response format shift.
 
-Schema validation safely catches unreadable documents (rejecting ~8% of severely degraded inputs where critical fields cannot be resolved). Those rejections represent correct system behavior: rejecting unreadable input is far better than writing half-populated records.
+The rejection rate on severely degraded inputs is around 8%, which I consider correct behavior. The preprocessing stage brings most documents to an extractable state, but some are too far gone. Rejecting them explicitly is right.
 
-### Entry 9 — Dashboard and Storage
+### Entry 7 — The checklist problem with deskew
 
-Built the demonstration dashboard using Streamlit on top of SQLite:
-- Single-document upload and benchmark sample switcher.
-- Side-by-side view of raw input against extracted fields with confidence badges.
-- SQLite FTS5 search enabling instant substring and prefix queries across vendor names, line items, and parameters.
-- Rejection queue viewer with diagnostic logs.
+The most specific bug I hit during the build: the deskew function was performing badly on inspection report checklists and giving wrong rotation corrections.
 
-### Entry 10 — Automated Testing & Quality Assurance
+The deskew algorithm uses the Hough line transform to find dominant line angles in the document image and rotate to correct skew. The median angle across all detected lines is used for the correction. On a text-heavy invoice or spec sheet, the dominant lines are text baselines and table borders — long horizontal runs that accurately represent the document's orientation.
 
-Codified a comprehensive automated test suite with `pytest`:
-- Unit tests for preprocessing (deskew calculation, shadow removal, adaptive binarization).
-- Strict schema validation tests ensuring invalid records (e.g. negative grand totals, specifications with 0 parameters) are rejected.
-- Tabular extraction verification across vector PDFs and raster grids.
-- End-to-end integration tests verifying complete pipeline execution.
+Inspection checklists are different. They contain dozens of short horizontal rules: the tick boxes, the short dividers between checklist rows, the column separators in a small table. These short lines are numerous enough to shift the median away from the actual text baselines, and the deskew function was making corrections based on the wrong angle.
 
-All tests pass cleanly, and a GitHub Actions CI workflow runs the suite automatically on every push.
+The fix: filter Hough line segments to only include lines longer than 25% of the image width before computing the median. Short lines — anything that could be a checkbox or a decorative rule — are excluded from the angle calculation. I also added a safety threshold: if the estimated rotation exceeds ±15°, skip deskew entirely, because an angle that large indicates a 90° orientation problem that micro-deskewing won't solve.
+
+After the fix, the same checklist samples that were coming out skewed or over-corrected were being handled correctly. The preprocessing tests (`test_deskew_correction`) verify this with a synthetic canvas of angled lines.
+
+### Entry 8 — End-to-end performance
+
+After the preprocessing fix the pipeline ran cleanly across all three document categories.
+
+The improvement from preprocessing is significant on degraded inputs. On raw degraded scans without any enhancement, character-level accuracy on the test corpus was around 71%. After the full preprocessing chain (deskew → shadow removal → denoising → binarization), that comes up to around 89%. The preprocessing stage is doing the heavy lifting — the OCR engine works well when it gets clean input.
+
+Confidence scoring works as intended. High-quality digital PDFs consistently score above 0.8. Degraded scanned documents with partial field extraction land in the 0.6–0.75 range. Severely degraded inputs where critical fields can't be found score below 0.6 and get routed to the rejection queue.
+
+### Entry 9 — Dashboard and storage
+
+The Streamlit dashboard serves two purposes: demo interface and operational monitor.
+
+The extraction tab shows the raw document alongside the extracted fields in a two-column layout. For invoices, the arithmetic cross-check result is displayed explicitly — a green "passed" or a red "mismatch detected" — rather than just a confidence number. Confidence is displayed with colour-coded labels (High / Medium / Low) per result.
+
+The FTS5 search tab exposes the SQLite full-text index directly. Searching "TATA METALIKS" returns all invoices where that vendor name appears in the extracted JSON, with prefix matching so partial terms work too. The LIKE fallback handles edge cases where FTS5 rejects the query string.
+
+The metrics tab shows aggregate stats: total documents processed, rejection rate, average confidence by document type. These are the operational numbers you'd monitor in a real deployment.
+
+### Entry 10 — Tests and CI
+
+Automated tests cover four areas:
+
+**Preprocessing:** deskew on a synthetic rotated canvas, shadow removal on a gradient image, binarization on random noise input. These test behavior, not exact output, since the transformations involve some numerical variation.
+
+**Schema validation:** five tests that document the rejection criteria. Negative grand total must fail. Empty parameters list must fail. Invalid checklist status must fail. Arithmetic mismatch must be detected. These tests are living documentation — if someone changes the validation logic, one of these will break first.
+
+**Table extraction:** verifies that `extract_tables_from_pdf` on a generated invoice returns populated row data. Skips if the corpus hasn't been generated yet.
+
+**Integration:** full pipeline run on a generated invoice and spec. Missing file input must raise an error. These tests catch regressions in the module wiring without requiring the actual LLM API (the heuristic fallback runs offline).
+
+GitHub Actions runs the suite on Python 3.11 and 3.12, generates the test corpus before pytest, and reports failures on push.
 
 ---
 
-*Key takeaway: In document intelligence, OCR and image preprocessing are where 80% of real-world failures happen. The LLM extraction layer works exceptionally well when given clean text and layout context, but robust CV preprocessing is what makes that text readable in the first place.*
+*The thing I'd tell myself at the start: the preprocessing stage is where the real work is. Clean OCR text makes everything downstream easy. Noisy OCR text makes everything downstream unreliable, no matter how good the extraction logic is. Get the image clean first.*
