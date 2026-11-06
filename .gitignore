@@ -57,3 +57,9 @@ outputs/midas.db
 outputs/midas.db*
 outputs/preprocessed/
 outputs/temp_uploads/
+
+# Extracted & rejected output records (runtime artifacts — not part of source)
+outputs/extracted/*.json
+outputs/rejected/*.json
+!outputs/extracted/.gitkeep
+!outputs/rejected/.gitkeep

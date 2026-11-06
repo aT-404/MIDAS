@@ -9,7 +9,7 @@ Built around a real operational bottleneck: in large enterprises, critical infor
 ## Key Features
 
 - **Multi-Format Ingestion:** Accepts scanned PDFs, phone-photographed documents, digital PDFs, and raster images (JPG, PNG, TIFF). Pre-processes for skew, noise, shadow, and low contrast before OCR is called.
-- **PaddleOCR v4 Engine:** Performs text detection and recognition with support for rotated text blocks, multi-column layouts, and embedded tables — outperforms Tesseract on complex document structures including handwritten annotations.
+- **RapidOCR (PP-OCRv4) Engine:** Performs text detection and recognition via ONNX Runtime — no GPU or PaddlePaddle installation required. Supports rotated text blocks, multi-column layouts, and embedded tables, and outperforms Tesseract on complex document structures including handwritten annotations. PaddleOCR is used as an automatic fallback if RapidOCR is unavailable.
 - **Layout-Aware Region Detection:** LayoutParser classifies each region (title, paragraph, table, figure, header/footer) before extraction, preventing text from table cells from bleeding into prose blocks.
 - **Multimodal LLM Extraction Layer:** A structured prompt sent to Google Gemini Flash reads the OCR transcript and region map together, returning typed key-value pairs — handles abbreviations, field aliases, and contextual inference that rule-based parsers cannot.
 - **Pydantic Schema Validation:** Every extracted document is validated against a typed schema (Invoice, TechnicalSpecification, InspectionReport). Low-confidence or missing required fields are flagged, not silently dropped.
@@ -23,7 +23,7 @@ Built around a real operational bottleneck: in large enterprises, critical infor
 ```mermaid
 flowchart TD
     A["Raw Input (PDF / Scanned Image / Photo)"] --> B["Pre-processing Engine (src/preprocessing/enhance.py)"]
-    B --> C["PaddleOCR v4 Engine (src/ocr/engine.py)"]
+    B --> C["RapidOCR PP-OCRv4 Engine (src/ocr/engine.py)"]
     C --> D["Layout Region Classifier (src/layout/detector.py)"]
     D --> E["Table Parser (src/extraction/table_parser.py)"]
     D --> F["Entity Extractor — LLM Layer (src/extraction/entity_extractor.py)"]
@@ -43,7 +43,7 @@ flowchart TD
 Input: A photographed A4 invoice taken at an 8° angle under uneven fluorescent lighting. Supplier name printed in a condensed typeface that Tesseract 4 consistently misreads.
 
 1. **Pre-processing:** Deskew corrects the 8° tilt. Adaptive thresholding removes the lighting shadow from the top-left corner. Output: a clean 300 DPI binary image.
-2. **OCR:** PaddleOCR detects 34 text regions. Supplier name correctly reads `TATA METALIKS LTD` — Tesseract produced `TATA MET/4LlKS LlD` on the same input.
+2. **OCR:** RapidOCR (PP-OCRv4 via ONNX Runtime) detects 34 text regions. Supplier name correctly reads `TATA METALIKS LTD` — Tesseract produced `TATA MET/4LlKS LlD` on the same input.
 3. **Layout Detection:** 6 region types classified: Title (1), Header blocks (2), Table (1), Footer blocks (2).
 4. **Table Parser:** Extracts the 6-row line-item table with columns `Item`, `Qty`, `Unit Price`, `Total`. Grid reconstructed from contour spacing — the original scan has no visible grid lines.
 5. **LLM Extraction:** Gemini Flash receives the OCR transcript and region labels. Returns `{"vendor": "TATA METALIKS LTD", "invoice_number": "INV-0047", "date": "2025-11-14", "line_items": [...], "total_amount": 148750.00, "currency": "INR"}`.
@@ -66,7 +66,7 @@ Copy `.env.example` to `.env` and add your Gemini API key:
 
 ```
 GEMINI_API_KEY=your_api_key_here
-EXTRACTION_MODEL=gemini-1.5-flash
+EXTRACTION_MODEL=gemini-2.0-flash
 OCR_LANG=en
 CONFIDENCE_THRESHOLD=0.75
 ```

@@ -6,7 +6,7 @@ This guide details environment setup, configuration, and execution of the MIDAS 
 
 ## 1. System Requirements
 
-- Python 3.10 to 3.13
+- Python 3.11 or 3.12 (tested in CI)
 - Windows, macOS, or Linux
 - Optional: Google Gemini API key from [Google AI Studio](https://aistudio.google.com/)
 
@@ -36,7 +36,7 @@ Edit `.env` to configure your Gemini API Key and settings:
 
 ```ini
 GEMINI_API_KEY=your_gemini_api_key_here
-EXTRACTION_MODEL=gemini-1.5-flash
+EXTRACTION_MODEL=gemini-2.0-flash
 OCR_LANG=en
 CONFIDENCE_THRESHOLD=0.75
 DB_PATH=outputs/midas.db
